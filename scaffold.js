@@ -10,7 +10,9 @@ function scaffoldProject(projectDirectory) {
   });
   fs.writeFileSync(path.join(basePath, 'src', 'index.js'), '// Your main JS file');
   fs.writeFileSync(path.join(basePath, 'styles', 'main.css'), '/* Your main stylesheet */');
-  fs.writeFileSync(path.join(basePath, 'dist', 'index.html'), generateHtmlContent());
+  // get webpack.config.js from our folder, and add it to scaffold
+  fs.copyFileSync(path.join(__dirname, 'webpack.config.js'), path.join(basePath, 'webpack.config.js'));
+  fs.writeFileSync(path.join(basePath, 'index.html'), generateHtmlContent());
   console.log(`Project scaffolded successfully in ${basePath}`);
   initializeNpmAndInstallPackages(basePath);
   addNpmScripts(basePath);
