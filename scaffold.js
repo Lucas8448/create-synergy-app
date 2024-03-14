@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+const { execSync } = require('child_process');
 
 function scaffoldProject(projectDirectory) {
   const basePath = path.join(process.cwd(), projectDirectory);
@@ -11,6 +12,8 @@ function scaffoldProject(projectDirectory) {
   fs.writeFileSync(path.join(basePath, 'styles', 'main.css'), '/* Your main stylesheet */');
   fs.writeFileSync(path.join(basePath, 'dist', 'index.html'), generateHtmlContent());
   console.log(`Project scaffolded successfully in ${basePath}`);
+  initializeNpmAndInstallPackages(basePath);
+  addNpmScripts(basePath);
 }
 
 function generateHtmlContent() {
@@ -26,6 +29,39 @@ function generateHtmlContent() {
   <script src="../src/index.js"></script>
 </body>
 </html>`;
+}
+
+
+function initializeNpmAndInstallPackages(basePath) {
+  console.log('Initializing npm and installing packages...');
+  process.chdir(basePath);
+  execSync('npm init -y', { stdio: 'inherit' });
+  const packagesToInstall = [
+    'synergy-js',
+    'webpack',
+    'webpack-cli',
+    'webpack-dev-server',
+    'html-webpack-plugin',
+    'babel-loader',
+    '@babel/core',
+    '@babel/preset-env',
+    'style-loader',
+    'css-loader'
+  ].join(' ');
+  
+  execSync(`npm install ${packagesToInstall}`, { stdio: 'inherit' });
+}
+
+function addNpmScripts(basePath) {
+  const packageJsonPath = path.join(basePath, 'package.json');
+  const packageJson = require(packageJsonPath);
+
+  packageJson.scripts = {
+    "start": "webpack serve --open",
+    "build": "webpack --mode production"
+  };
+
+  fs.writeFileSync(packageJsonPath, JSON.stringify(packageJson, null, 2));
 }
 
 module.exports = { scaffoldProject };
