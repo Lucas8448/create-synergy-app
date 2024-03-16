@@ -48,7 +48,8 @@ function initializeNpmAndInstallPackages(basePath) {
     '@babel/core',
     '@babel/preset-env',
     'style-loader',
-    'css-loader'
+    'css-loader',
+    'clean-webpack-plugin'
   ].join(' ');
   
   execSync(`npm install ${packagesToInstall}`, { stdio: 'inherit' });
@@ -59,7 +60,7 @@ function addNpmScripts(basePath) {
   const packageJson = require(packageJsonPath);
 
   packageJson.scripts = {
-    "start": "webpack serve --open",
+    "start": "webpack serve --open development",
     "build": "webpack --mode production"
   };
 
