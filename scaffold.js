@@ -60,7 +60,7 @@ function addNpmScripts(basePath) {
   const packageJson = require(packageJsonPath);
 
   packageJson.scripts = {
-    "start": "webpack serve --open development",
+    "start": "webpack serve --open --mode development",
     "build": "webpack --mode production"
   };
 
